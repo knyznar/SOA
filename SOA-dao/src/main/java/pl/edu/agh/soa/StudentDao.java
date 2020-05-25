@@ -76,6 +76,20 @@ public class StudentDao {
                 .orElseThrow(Exception::new);
     }
 
+    public List<Student> findByLastname(String lastname) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<StudentEntity> query = cb.createQuery(StudentEntity.class);
+        Root<StudentEntity> studentEntityRoot = query.from(StudentEntity.class);
+        query.select(studentEntityRoot).where(cb.equal(studentEntityRoot.get("lastName"), lastname));
+
+        return entityManager
+                .createQuery(query)
+                .getResultList()
+                .stream()
+                .map(StudentDao::entityToStudent)
+                .collect(Collectors.toList());
+    }
+
     public List<Student> findAll() {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<StudentEntity> query = cb.createQuery(StudentEntity.class);
@@ -99,7 +113,6 @@ public class StudentDao {
         studentEntity.setFirstName(student.getFirstName());
         studentEntity.setLastName(student.getLastName());
         studentEntity.setAvatarPath(student.getAvatarPath());
-
     }
 
 }

@@ -82,6 +82,20 @@ public class StudentController {
                 .build();
     }
 
+    @GET
+    @Path("/byLastname/{lastname}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiResponses({@ApiResponse(code=200, message="Success"), @ApiResponse(code=404, message = "Not Found")})
+    public Response getStudentByLastname(@PathParam("lastname") String lastname) {
+        List<Student> result = studentDao.findByLastname(lastname);
+        return Response
+                .ok()
+                .entity(result)
+                .status(Response.Status.OK)
+                .header("Access-Control-Allow-Methods", "GET")
+                .build();
+    }
+
     @POST
     @Path("")
 //    @JWTTokenNeeded
@@ -125,6 +139,7 @@ public class StudentController {
     @Path("/{album}")
 //    @JWTTokenNeeded
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiResponses({@ApiResponse(code=200, message="Success"), @ApiResponse(code=404, message="Not Found")})
     public Response updateStudent(@PathParam("album") int album, @QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName, @QueryParam("avatar") String avatar){
         Student student;
         try {
